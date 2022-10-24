@@ -139,6 +139,8 @@ class MainActivity : AppCompatActivity() {
         timerTask?.cancel() // 정지 후
         repeatedTime = 0 // 시간 0으로 초기화
         lagtime = 0
+        lagList.clear()
+        timeList.clear()
         isRunning = false // 정지상태
         with(binding){
             fabStart.text = "시작"
