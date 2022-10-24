@@ -1,6 +1,8 @@
 package com.lee.fragment.stopwatchpj
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -19,11 +21,19 @@ class MainActivity : AppCompatActivity() {
     private var isRunning = false  // 시작, 정지 구분 boolean 변수
     private var timerTask : Timer? = null  //
     private var countRecord = 0 //구간 횟수
+    private lateinit var livemytime: myTime
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if(savedInstanceState == null){
+            val ft = supportFragmentManager.beginTransaction()
+            with(ft){
+                add(R.id.saveTimeContainer, saveTimeFragment.newInstance())
+                commit()
+            }
+        }
         with(binding){
             // 시작버튼 (시작 -> 중지 -> 계속)
             fabStart.setOnClickListener{
@@ -36,39 +46,69 @@ class MainActivity : AppCompatActivity() {
             }
             // 저장
             btnLab.setOnClickListener{
-                if(repeatedTime != 0) currentTapTime()
-                binding.recordTitle.text = "구간        구간기록              전체시간"
+                var fragment = saveTimeFragment()
+                var bundle = Bundle()
+                bundle.putString(EXTRA_HOUR, livemytime.hour)
+                bundle.putString(EXTRA_MINUTE, livemytime.minute)
+                bundle.putString(EXTRA_SECOND, livemytime.second)
+                bundle.putString(EXTRA_MILSECOND, livemytime.milsecond)
+                fragment.arguments = bundle
+                supportFragmentManager!!.beginTransaction()
+                    .replace(R.id.saveTimeContainer,fragment)
+                    .commit()
+                /*Intent(this@MainActivity, saveTimeFragment::class.java).run {
+                    putExtra(EXTRA_HOUR, livemytime.hour)
+                    putExtra(EXTRA_MINUTE, livemytime.minute)
+                    putExtra(EXTRA_SECOND, livemytime.second)
+                    putExtra(EXTRA_MILSECOND, livemytime.milsecond)
+                    startActivity(this)
+                }*/
             }
         }
+    }
+    private fun timesetting(checkTime: Int):myTime{
+        var settingmyTime = myTime("","","","")
+        var hour = 0
+        var minute = 0
+        var seconds = checkTime / 100
+        var milliceconds = checkTime % 100
+        if(minute >= 60){  // 분을 시로
+            hour = minute / 60
+            minute %= minute
+        }
+        if( seconds >= 60){ // 초를 분으로
+            minute = seconds / 60
+            seconds %= 60
+        }
+        var stringHour = if (hour >=1) "${hour}" //시부분
+                            else ""
+        var stringMinute = if(minute >=10) "${minute}" //분부분
+            else "0${minute}"
+        var stringSecond = if(seconds >=10) "${seconds}"  //초부분
+            else "0${seconds}"
+        var stringMilsecond = if(milliceconds >=10) "${milliceconds}" //밀리 초부분
+            else "0${milliceconds}"
+
+        settingmyTime.hour = stringHour
+        settingmyTime.minute = stringMinute
+        settingmyTime.second = stringSecond
+        settingmyTime.milsecond = stringMilsecond
+        return settingmyTime
     }
     private fun start(){
         binding.fabStart.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24) // 시작 아이콘
         timerTask = kotlin.concurrent.timer(period = 10){
             repeatedTime++
 
-            var hour = 0
-            var minute = 0
-            var seconds = repeatedTime /100
-            if(minute >= 60){  // 분을 시로
-                hour = minute / 60
-                minute %= minute
-            }
-            if( seconds >= 60){ // 초를 분으로
-                minute = seconds / 60
-                seconds %= 60
-            }
-            var milliseconds = repeatedTime % 100
+            livemytime = timesetting(repeatedTime)
 
             //Main Thread 에서 Runnable 실행
             runOnUiThread{
                 with(binding){ // 출력부분 최신화
-                    if (hour >=1) hourText.text = "${hour}" //시부분
-                    if(minute >=10) minuteText.text = "$minute:" //분부분
-                    else minuteText.text = "0${minute}:"
-                    if(seconds >=10) secondsText.text = "${seconds}."  //초부분
-                    else secondsText.text = "0${seconds}."
-                    if(milliseconds >=10) millisecondsText.text = "$milliseconds" //밀리 초부분
-                    else millisecondsText.text = "0${milliseconds}"
+                    hourText.text = "${livemytime.hour}" //시부분
+                    minuteText.text = "${livemytime.minute}:" //분부분
+                    secondsText.text = "${livemytime.second}."  //초부분
+                    millisecondsText.text = "${livemytime.milsecond}" //밀리 초부분
                 }
             }
         }
@@ -88,8 +128,6 @@ class MainActivity : AppCompatActivity() {
                 minuteText.text ="00:"
                 secondsText.text = "00."
                 millisecondsText.text = "00"
-                lapLayout.removeAllViews()
-                lapLayout.invalidate()  //자원 해제
             }
         }
     }
@@ -108,9 +146,6 @@ class MainActivity : AppCompatActivity() {
                 "${lapTime / 100}.${lapTime % 100}              " +  // 기록될 시간 양식
                 "${lapTime / 100}.${lapTime % 100}"
 
-        binding.lapLayout.addView(textView,0)
     }
-    private fun timesetting(){
 
-    }
 }
