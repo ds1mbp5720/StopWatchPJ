@@ -1,55 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_horizontal">
 
     <TextView
-        android:id="@+id/hour"
+        android:id="@+id/listNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40dp"
-        android:text="00"/>
-    <TextView
-        android:id="@+id/rightHour"
+        android:paddingRight="50dp"
+        android:textSize="15dp"/>
+
+    <RelativeLayout
+        android:id="@+id/savebetweentime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40dp"
-        android:layout_toRightOf="@id/hour"
-        android:text=":"/>
-    <TextView
-        android:id="@+id/minute"
+        android:paddingRight="50dp">
+        <TextView
+            android:id="@+id/betweenhour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="00"/>
+        <TextView
+            android:id="@+id/betweenminute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/betweenhour"
+            android:textSize="15dp"
+            android:text="00"/>
+        <TextView
+            android:id="@+id/betweensecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/betweenminute"
+            android:textSize="15dp"
+            android:text="00"/>
+        <TextView
+            android:id="@+id/betweenmilsecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/betweensecond"
+            android:textSize="15dp"
+            android:text="00"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/savetruetime"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/rightHour"
-        android:textSize="40dp"
-        android:text="00"/>
-    <TextView
-        android:id="@+id/rightMinute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="40dp"
-        android:layout_toRightOf="@id/minute"
-        android:text=":"/>
-    <TextView
-        android:id="@+id/second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/rightMinute"
-        android:textSize="40dp"
-        android:text="00"/>
-    <TextView
-        android:id="@+id/rightSecond"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="40dp"
-        android:layout_toRightOf="@id/second"
-        android:text="."/>
-    <TextView
-        android:id="@+id/milsecond"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/rightSecond"
-        android:textSize="40dp"
-        android:text="00"/>
-</RelativeLayout>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="00"/>
+        <TextView
+            android:id="@+id/minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/hour"
+            android:textSize="15dp"
+            android:text="00"/>
+        <TextView
+            android:id="@+id/second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/minute"
+            android:textSize="15dp"
+            android:text="00"/>
+        <TextView
+            android:id="@+id/milsecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/second"
+            android:textSize="15dp"
+            android:text="00"/>
+    </RelativeLayout>
+</LinearLayout>

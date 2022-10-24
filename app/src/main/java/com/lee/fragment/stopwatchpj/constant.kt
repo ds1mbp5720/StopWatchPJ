@@ -1,6 +1,7 @@
 package com.lee.fragment.stopwatchpj
 
-const val EXTRA_HOUR = "save_hour_key"
-const val EXTRA_MINUTE = "save_minute_key"
-const val EXTRA_SECOND = "save_second_key"
-const val EXTRA_MILSECOND = "save_milsecond_key"
+/**
+ * key 값 저장 함수
+ */
+const val EXTRA_SAVETIME = "save_savetime_key"  // 현재 시간
+const val EXTRA_LAG = "save_lagtime_key"  // 직전 후 측정 시간

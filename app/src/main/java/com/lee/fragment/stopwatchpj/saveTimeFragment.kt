@@ -31,28 +31,54 @@ class saveTimeFragment:Fragment() {
         LinearLayoutManager.VERTICAL, false)
         with(binding.saveTimeList){
             layoutManager = listmaneger
-            adapter = saveTimeRecyclerViewAdapter(timeSave(),activity as Activity)
+            adapter = saveTimeRecyclerViewAdapter(timeSave(),lagtimeSave(),activity as Activity)
+            println(timeSave())
+
         }
-
-
+    }
+    private fun lagtimeSave() = mutableListOf<myTime>().apply {
+        var recevietime = arguments?.getIntArray(EXTRA_LAG)
+        if(recevietime != null){
+            for(i in 0 until recevietime!!.size){
+                add(timesetting(recevietime[i]))
+            }
+        }
     }
     private fun timeSave() = mutableListOf<myTime>().apply {
-        val hour = arguments?.getString(EXTRA_HOUR)
-        val minute = arguments?.getString(EXTRA_MINUTE)
-        val second = arguments?.getString(EXTRA_SECOND)
-        val milsecond = arguments?.getString(EXTRA_MILSECOND)
-        if(hour != null && minute != null && second != null && milsecond != null ){
-            add(myTime(hour,minute,second,milsecond))
-        }
-
-        println("받았다")
-        /*var intent = Intent()
-        with(binding){
-            with(intent){
-                add(myTime(getIntExtra(EXTRA_HOUR,0),getIntExtra(EXTRA_MINUTE,0),
-                            getIntExtra(EXTRA_SECOND,0), getIntExtra(EXTRA_MILSECOND,0)))
-                println("받았다")
+        var recevietime = arguments?.getIntArray(EXTRA_SAVETIME)
+        if(recevietime != null){
+            for(i in 0 until recevietime!!.size){
+                add(timesetting(recevietime[i]))
             }
-        }*/
+        }
+    }
+    private fun timesetting(checkTime: Int):myTime{
+        var settingmyTime = myTime("","","","")
+        var hour = 0
+        var minute = 0
+        var seconds = checkTime / 100
+        var milliceconds = checkTime % 100
+        if(minute >= 60){  // 분을 시로
+            hour = minute / 60
+            minute %= minute
+        }
+        if( seconds >= 60){ // 초를 분으로
+            minute = seconds / 60
+            seconds %= 60
+        }
+        var stringHour = if (hour >=1) "${hour}:" //시부분
+        else ""
+        var stringMinute = if(minute >=10) "${minute}:" //분부분
+        else "0${minute}:"
+        var stringSecond = if(seconds >=10) "${seconds}."  //초부분
+        else "0${seconds}."
+        var stringMilsecond = if(milliceconds >=10) "${milliceconds}" //밀리 초부분
+        else "0${milliceconds}"
+
+        settingmyTime.hour = stringHour
+        settingmyTime.minute = stringMinute
+        settingmyTime.second = stringSecond
+        settingmyTime.milsecond = stringMilsecond
+        return settingmyTime
     }
 }

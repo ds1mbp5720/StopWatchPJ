@@ -9,6 +9,7 @@ import com.lee.fragment.stopwatchpj.databinding.RecyclerTimeBinding
 
 class saveTimeRecyclerViewAdapter(
     private val timeList: MutableList<myTime>,
+    private val lagtimeList: MutableList<myTime>,
     private val owner: Activity
 ):RecyclerView.Adapter<saveTimeRecyclerViewAdapter.mytimeViewHolder>(){
 
@@ -17,14 +18,21 @@ class saveTimeRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): mytimeViewHolder {
         val binding = RecyclerTimeBinding.inflate(
-            LayoutInflater.from(parent.context),parent, false
-        )
+            LayoutInflater.from(parent.context),parent, false)
         return mytimeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: mytimeViewHolder, position: Int) {
         val timeData = timeList[position]
+        val lagData = lagtimeList[position]
         with(holder.binding){
+            listNum.text = "${position+1}"
+
+            betweenhour.text = lagData.hour
+            betweenminute.text = lagData.minute
+            betweensecond.text = lagData.second
+            betweenmilsecond.text = lagData.milsecond
+
             hour.text = timeData.hour
             minute.text = timeData.minute
             second.text = timeData.second
