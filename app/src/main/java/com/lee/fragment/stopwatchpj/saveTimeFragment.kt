@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.rangeTo
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lee.fragment.stopwatchpj.databinding.RecyclerTimeBinding
@@ -27,15 +28,16 @@ class saveTimeFragment:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val listmaneger = LinearLayoutManager(activity as Activity,
-        LinearLayoutManager.VERTICAL, false)
+        // 출력되는 list 형식
+        val listManager = LinearLayoutManager(activity as Activity,
+        LinearLayoutManager.VERTICAL, true)
         with(binding.saveTimeList){
-            layoutManager = listmaneger
+            layoutManager = listManager
             adapter = saveTimeRecyclerViewAdapter(timeSave(),lagtimeSave(),activity as Activity)
-            println(timeSave())
-
+            println(timeSave()) // list 확인
         }
     }
+    // 전달받은 list를 data clss 형식 list로 반환
     private fun lagtimeSave() = mutableListOf<myTime>().apply {
         var recevietime = arguments?.getIntArray(EXTRA_LAG)
         if(recevietime != null){
@@ -52,12 +54,16 @@ class saveTimeFragment:Fragment() {
             }
         }
     }
+
+    /**
+     * main에서 받은 값을 시간 양식에 맞춰 변경 함수
+     */
     private fun timesetting(checkTime: Int):myTime{
         var settingmyTime = myTime("","","","")
         var hour = 0
         var minute = 0
         var seconds = checkTime / 100
-        var milliceconds = checkTime % 100
+        var milliseconds = checkTime % 100
         if(minute >= 60){  // 분을 시로
             hour = minute / 60
             minute %= minute
@@ -72,8 +78,8 @@ class saveTimeFragment:Fragment() {
         else "0${minute}:"
         var stringSecond = if(seconds >=10) "${seconds}."  //초부분
         else "0${seconds}."
-        var stringMilsecond = if(milliceconds >=10) "${milliceconds}" //밀리 초부분
-        else "0${milliceconds}"
+        var stringMilsecond = if(milliseconds >=10) "${milliseconds}" //밀리 초부분
+        else "0${milliseconds}"
 
         settingmyTime.hour = stringHour
         settingmyTime.minute = stringMinute

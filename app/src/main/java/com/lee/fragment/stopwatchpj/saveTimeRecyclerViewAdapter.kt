@@ -21,18 +21,18 @@ class saveTimeRecyclerViewAdapter(
             LayoutInflater.from(parent.context),parent, false)
         return mytimeViewHolder(binding)
     }
-
+    // 리스트에 저장될 양식
     override fun onBindViewHolder(holder: mytimeViewHolder, position: Int) {
         val timeData = timeList[position]
         val lagData = lagtimeList[position]
         with(holder.binding){
-            listNum.text = "${position+1}"
-
+            listNum.text = "${position+1}"  // 저장 번호
+            //구간 시간차 시간
             betweenhour.text = lagData.hour
             betweenminute.text = lagData.minute
             betweensecond.text = lagData.second
             betweenmilsecond.text = lagData.milsecond
-
+            //저장 누른 시간
             hour.text = timeData.hour
             minute.text = timeData.minute
             second.text = timeData.second
