@@ -1,16 +1,13 @@
 package com.lee.fragment.stopwatchpj
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcel
-import android.widget.TextView
+import android.os.Parcelable
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.lee.fragment.stopwatchpj.databinding.ActivityMainBinding
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 /** -사양-
  *  버튼 묶음: (시작 -> 중지 -> 계속), (구간기록 -> 초기화)
@@ -24,8 +21,8 @@ class MainActivity : AppCompatActivity() {
     private var isRunning = false  // 시작, 정지 구분 boolean 변수
     private var timerTask : Timer? = null  //
     private var lagtime = 0 // 눌렸을때 시간
-    private val timeList : MutableList<Int> = mutableListOf()
-    private val lagList : MutableList<Int> = mutableListOf()
+    private val timeList : MutableList<myTime> = mutableListOf()
+    private val lagList : MutableList<myTime> = mutableListOf()
     private lateinit var livemytime: myTime
     private lateinit var restarttime: myTime
 
@@ -33,13 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        /*if(savedInstanceState == null){
-            val ft = supportFragmentManager.beginTransaction()
-            with(ft){
-                add(R.id.saveTimeContainer, saveTimeFragment.newInstance())
-                commit()
-            }
-        }*/
+
         with(binding){
             // 시작버튼 (시작 -> 중지 -> 계속)
             fabStart.setOnClickListener{
@@ -51,6 +42,10 @@ class MainActivity : AppCompatActivity() {
                 if(isRunning) save() else reset()  // 시작 혹은 정지
             }
         }
+    }
+    // back key로 완전 종료시키기
+    override fun onBackPressed() {
+        finish()
     }
 
     /**
@@ -117,22 +112,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
     /**
      * 구간기록 함수
      */
     private fun save(){
-        lagList.add(repeatedTime - lagtime)  // 구간 기록 누른 이후 시간차 저장 list
-        timeList.add(repeatedTime)  // 구간 기록된 시간들 저장 list
+        supportFragmentManager.popBackStack("saveTimeList",
+            FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        lagList.add(timesetting(repeatedTime - lagtime))
+        timeList.add(timesetting(repeatedTime))
         lagtime = repeatedTime  // 저장 이후 시작하는 시간
         var bundle = Bundle() // saveFragment 전달
         var saveFragment = saveTimeFragment() // 외부로 나가면 화면 갱신이 안됨
-        bundle.putIntArray(EXTRA_SAVETIME,timeList.toIntArray()) // 구간 측정 list 전달
-        bundle.putIntArray(EXTRA_LAG,lagList.toIntArray())  // 구간 시간차 list 전달
+
+        bundle.putParcelableArrayList(EXTRA_SAVETIME, timeList as ArrayList<out Parcelable?>?)
+        bundle.putParcelableArrayList(EXTRA_LAG, lagList as ArrayList<out Parcelable?>?)
+
         saveFragment.arguments = bundle
         supportFragmentManager!!.beginTransaction().apply {
-            replace(R.id.saveTimeContainer,saveFragment)
+            add(R.id.saveTimeContainer,saveFragment)
+            setReorderingAllowed(true)
             addToBackStack("saveTimeList")  // 초기화때 삭제를 위한 이름 명시
             commit()
         }
@@ -173,4 +171,5 @@ class MainActivity : AppCompatActivity() {
                 FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
+
 }
