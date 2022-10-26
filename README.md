@@ -24,8 +24,8 @@
    - save() : 시간 측정 및 구간 측정
    - puse() : 정지
    - reset() : 초기화
-   
-#### 3. 동작 방식
+    
+#### 2. 동작 방식
   - activity에 버튼 및 시간 측정 구현
   - recyclerView 활용 측정한 시간들 list 출력
   - 측정 저장값들 bundle을 통한 값 전달
